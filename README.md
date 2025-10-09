@@ -1,4 +1,6 @@
-# 🌱 DecypharrSeed — Beta
+<p align="center">
+  <img src="screens/DecypharrSeed.logo.name.png" alt="DecypharrSeed Logo" width="320" />
+</p>
 
 **DecypharrSeed** est un outil web minimaliste de **gestion, suivi et envoi de torrents** basé sur les fichiers JSON issus de [**Decypharr**](https://github.com/sirrobot01/decypharr) ou d’autres outils équivalent (non testés).  
 Son objectif : centraliser, visualiser, et gérer facilement la diffusion de contenus seedés depuis une seedbox ou un environnement Docker, tout en conservant une traçabilité locale.
