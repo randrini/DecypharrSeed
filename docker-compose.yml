@@ -1,0 +1,19 @@
+services:
+  magnet-cc:
+    build: .
+    image: magnet-cc:latest
+    container_name: DecypharrSeed
+    restart: always
+    ports:
+      - "8069:8069"
+    environment:
+      MCC_USER: "aerya"
+      MCC_PASS: "aerya"
+      MCC_PORT: "8069"
+      MCC_HOST: "0.0.0.0"
+# Pour plusieurs => /data/alldebrid:/data/realdebrid:/data/abc
+      MCC_JSON_DIRS: "/data/alldebrid"
+# Si autre débrideur qu'AD ou plusieurs, adapter ou ajouter des volumes
+    volumes:
+      - /home/aerya/docker/decypharr/configs/cache/alldebrid:/data/alldebrid:ro
+      - /home/aerya/docker/DecypharrSeed:/data
