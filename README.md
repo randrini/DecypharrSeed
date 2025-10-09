@@ -12,8 +12,7 @@ Son objectif : centraliser, visualiser, et gérer facilement la diffusion de con
 > Quelques captures de la bêta
 
 
-| ![Dashboard](screens/1.png) | ![Scan](screens/4.png) | ![Rules](screens/3.png) | ![Settings](screens/2.png) |
-| ![Dashboard](screens/5.png) |
+![Dashboard](screens/1.png) ![Scan](screens/4.png) ![Rules](screens/3.png) ![Settings](screens/2.png) ![Dashboard](screens/5.png) |
 
 
 
