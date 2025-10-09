@@ -1,19 +1,34 @@
 # 🌱 DecypharrSeed — Beta
 
-**DecypharrSeed** est un outil web minimaliste de **gestion, suivi et envoi de torrents** basé sur les fichiers JSON issus de **Decypharr** ou d’autres services de liens débridés (AllDebrid, etc.).  
+**DecypharrSeed** est un outil web minimaliste de **gestion, suivi et envoi de torrents** basé sur les fichiers JSON issus de [**Decypharr**](https://github.com/sirrobot01/decypharr) ou d’autres outils équivalent (non testés).  
 Son objectif : centraliser, visualiser, et gérer facilement la diffusion de contenus seedés depuis une seedbox ou un environnement Docker, tout en conservant une traçabilité locale.
 
 
 
 
 
-## 🖼️ Aperçu
+## 🐳 Exemple de `docker-compose.yml`
 
-> Quelques captures de la bêta
-
-
-![Dashboard](screens/1.png) ![Scan](screens/4.png) ![Rules](screens/3.png) ![Settings](screens/2.png) ![Dashboard](screens/5.png) |
-
+```yaml
+services:
+  magnet-cc:
+    image: ghcr.io/aerya/decypharrseed:latest
+    container_name: decypharrseed
+    restart: always
+    ports:
+      - "8069:8069"
+    environment:
+      MCC_USER: "aerya"
+      MCC_PASS: "aerya"
+      MCC_PORT: "8069"
+      MCC_HOST: "0.0.0.0"
+      # Pour plusieurs => /data/alldebrid:/data/realdebrid:/data/abc
+      MCC_JSON_DIRS: "/data/alldebrid"
+      # Si autre débrideur ou plusieurs, adapter ou ajouter des volumes
+    volumes:
+      - /home/aerya/docker/decypharr/configs/cache/alldebrid:/data/alldebrid:ro
+      - /home/aerya/docker/DecypharrSeed:/data
+```
 
 
 
@@ -71,7 +86,7 @@ Son objectif : centraliser, visualiser, et gérer facilement la diffusion de con
 
 
 
-### 🗺️ Roadmap
+## 🗺️ Roadmap
 
 - [ ] **Améliorer la détection des trackers**
   - Normaliser hosts (lowercase, strip ports, `www.`)
@@ -104,3 +119,11 @@ Son objectif : centraliser, visualiser, et gérer facilement la diffusion de con
   - Webhooks/notifications (Discord/Notify) sur événements clés
   - Déduplication basée sur `infohash` + normalisation noms (NFD, accents)
   - Traduction FR/EN
+
+
+
+
+
+## 🖼️ Aperçu
+
+![Dashboard](screens/1.png) ![Scan](screens/4.png) ![Rules](screens/3.png) ![Settings](screens/2.png) ![Dashboard](screens/5.png)

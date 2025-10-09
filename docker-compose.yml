@@ -1,8 +1,7 @@
 services:
   magnet-cc:
-    build: .
-    image: magnet-cc:latest
-    container_name: DecypharrSeed
+    image: ghcr.io/aerya/decypharrseed:latest
+    container_name: decypharrseed
     restart: always
     ports:
       - "8069:8069"
