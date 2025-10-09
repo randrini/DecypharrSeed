@@ -7,7 +7,7 @@ Son objectif : centraliser, visualiser, et gérer facilement la diffusion de con
 
 
 
-## 🐳 Exemple de `docker-compose.yml`
+## 🐳
 
 ```yaml
 services:
