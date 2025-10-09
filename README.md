@@ -11,7 +11,7 @@ Son objectif : centraliser, visualiser, et gérer facilement la diffusion de con
 
 ```yaml
 services:
-  magnet-cc:
+  decypharrseed:
     image: ghcr.io/aerya/decypharrseed:latest
     container_name: decypharrseed
     restart: always
