@@ -22,12 +22,12 @@ services:
       MCC_PASS: "aerya"
       MCC_PORT: "8069"
       MCC_HOST: "0.0.0.0"
-      # Pour plusieurs => /data/alldebrid:/data/realdebrid:/data/abc
+# Pour plusieurs => /data/alldebrid:/data/realdebrid:/data/abc
       MCC_JSON_DIRS: "/data/alldebrid"
-      # Si autre débrideur ou plusieurs, adapter ou ajouter des volumes
     volumes:
-      - /home/aerya/docker/decypharr/configs/cache/alldebrid:/data/alldebrid:ro
       - /home/aerya/docker/DecypharrSeed:/data
+      - /home/aerya/docker/decypharr/configs/cache/alldebrid:/data/alldebrid:ro
+# Si autre débrideur qu'AD ou plusieurs, adapter ou ajouter des volumes
 ```
 
 
