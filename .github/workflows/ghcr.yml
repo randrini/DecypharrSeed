@@ -31,7 +31,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/aerya/decypharrseed
+          images: ghcr.io/${{ github.repository_owner }}/decypharrseed
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=ref,event=tag
