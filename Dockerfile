@@ -4,9 +4,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
 WORKDIR /app
+
 COPY app.py /app/app.py
 
 # Pin libs for reproducibility
+# All these packages have ARM64 wheels available on PyPI
 RUN pip install --no-cache-dir \
       flask==3.0.3 \
       qbittorrent-api==2025.7.0 \
@@ -24,6 +26,7 @@ ENV MCC_PORT=8069 \
     MCC_WAITRESS=1
 
 EXPOSE 8069
+
 USER app
 
 # Healthcheck: simple GET /login
