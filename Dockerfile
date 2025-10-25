@@ -24,7 +24,7 @@ RUN set -eux; \
       ca-certificates \
       python3-dev \
     && python -m pip install --upgrade pip setuptools wheel \
-    && pip wheel --wheel-dir=/wheels -r requirements.txt
+    && pip wheel --wheel-dir=/wheels -r requirements.txt \
     && rm -rf /var/lib/apt/lists/*
 
 # Runtime stage: lightweight image with only runtime deps and app code
