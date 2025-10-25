@@ -35,29 +35,22 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Copy wheels built for the right architecture and install them offline
-COPY --from=builder /wheels /wheels
-COPY requirements.txt .
-
-RUN set -eux; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends ca-certificates \
-    && python -m pip install --upgrade pip \
-    && pip install --no-index --find-links=/wheels -r requirements.txt \
-    && rm -rf /var/lib/apt/lists/* /wheels
-
-# Application files
 COPY app.py /app/app.py
-
-# Add an entrypoint that handles PUID/PGID and ownership at container start
 COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
 
-# Create a non-root user with default uid/gid 10001 (can be changed at runtime)
-RUN set -eux; \
-    groupadd -g 10001 app 2>/dev/null || true; \
-    useradd -u 10001 -g 10001 -m -s /usr/sbin/nologin app 2>/dev/null || true; \
-    mkdir -p /data
+# Pin libs for reproducibility
+RUN pip install --no-cache-dir \
+      flask==3.0.3 \
+      qbittorrent-api==2025.7.0 \
+      pyyaml==6.0.2 \
+      python-dotenv==1.1.1 \
+      waitress==3.0.0 \
+ && chmod +x /app/entrypoint.sh \
+ && mkdir -p /data
+
+# Default PUID/PGID (can be overridden at runtime)
+ENV PUID=10001 \
+    PGID=10001
 
 # Default runtime env (override at runtime if needed)
 ENV MCC_PORT=8069 \
@@ -69,6 +62,9 @@ ENV MCC_PORT=8069 \
 
 EXPOSE 8069
 
-# Keep image starting as root so the entrypoint can change uid/gid and chown mounts.
+# Healthcheck: simple GET /login
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD \
+  python -c "import urllib.request,os,sys; port=os.environ.get('MCC_PORT','8069'); url=f'http://127.0.0.1:{port}/login'; import urllib.error; sys.exit(0 if urllib.request.urlopen(url, timeout=3).status==200 else 1)"
+
 ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["python","/app/app.py"]
