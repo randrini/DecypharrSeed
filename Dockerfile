@@ -49,24 +49,26 @@ RUN set -eux; \
 # Application files
 COPY app.py /app/app.py
 
-# Create a non-root user and data dir
-RUN useradd -u 10001 -m app \
- && mkdir -p /data \
- && chown -R app:app /data /app
+# Add an entrypoint that handles PUID/PGID and ownership at container start
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Create a non-root user with default uid/gid 10001 (can be changed at runtime)
+RUN set -eux; \
+    groupadd -g 10001 app 2>/dev/null || true; \
+    useradd -u 10001 -g 10001 -m -s /usr/sbin/nologin app 2>/dev/null || true; \
+    mkdir -p /data
 
 # Default runtime env (override at runtime if needed)
 ENV MCC_PORT=8069 \
     MCC_HOST=0.0.0.0 \
     MCC_DB=/data/magnet_cc.sqlite \
-    MCC_WAITRESS=1
+    MCC_WAITRESS=1 \
+    PUID=10001 \
+    PGID=10001
 
 EXPOSE 8069
-USER app
 
-# Healthcheck: simple GET /login
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD \
-  python -c "import urllib.request,os,sys; port=os.environ.get('MCC_PORT','8069'); url=f'http://127.0.0.1:{port}/login'; import urllib.error; \
-try: r = urllib.request.urlopen(url, timeout=3); sys.exit(0 if getattr(r,'status',None) in (200,301,302) or r.getcode()==200 else 1) \
-except Exception: sys.exit(1)"
-
+# Keep image starting as root so the entrypoint can change uid/gid and chown mounts.
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["python","/app/app.py"]
