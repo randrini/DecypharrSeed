@@ -6,18 +6,21 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 COPY app.py /app/app.py
+COPY entrypoint.sh /app/entrypoint.sh
 
 # Pin libs for reproducibility
-# All these packages have ARM64 wheels available on PyPI
 RUN pip install --no-cache-dir \
       flask==3.0.3 \
       qbittorrent-api==2025.7.0 \
       pyyaml==6.0.2 \
       python-dotenv==1.1.1 \
       waitress==3.0.0 \
- && useradd -u 10001 -m app \
- && mkdir -p /data \
- && chown -R app:app /data /app
+ && chmod +x /app/entrypoint.sh \
+ && mkdir -p /data
+
+# Default PUID/PGID (can be overridden at runtime)
+ENV PUID=10001 \
+    PGID=10001
 
 # Default runtime env (override at runtime if needed)
 ENV MCC_PORT=8069 \
@@ -27,10 +30,9 @@ ENV MCC_PORT=8069 \
 
 EXPOSE 8069
 
-USER app
-
 # Healthcheck: simple GET /login
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD \
   python -c "import urllib.request,os,sys; port=os.environ.get('MCC_PORT','8069'); url=f'http://127.0.0.1:{port}/login'; import urllib.error; sys.exit(0 if urllib.request.urlopen(url, timeout=3).status==200 else 1)"
 
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["python","/app/app.py"]
